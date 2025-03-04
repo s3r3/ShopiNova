@@ -15,6 +15,7 @@ import { IoClose, IoSearch, IoHomeOutline } from "react-icons/io5";
 import { TbBrandAirtable } from "react-icons/tb";
 import { SiSalesforce } from "react-icons/si";
 import { RiTShirtLine } from "react-icons/ri";
+import { RootState } from "../Redux/store";
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -27,7 +28,7 @@ const LandingPage = () => {
     { icon: <SiSalesforce />, label: "Sales" },
     { icon: <RiTShirtLine />, label: "Shirt" },
   ];
-  const showMenu = useSelector((state) => state.menu.showMenu);
+  const showMenu = useSelector((state:RootState) => state.menu.showMenu);
   const dispatch = useDispatch();
 
   const handleToggleMenu = () => dispatch(toggleMenu());

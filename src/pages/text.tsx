@@ -6,6 +6,7 @@ import { TbBrandAirtable } from "react-icons/tb";
 import { SiSalesforce } from "react-icons/si";
 import { RiTShirtLine } from "react-icons/ri";
 import { motion } from "framer-motion";
+import { RootState } from "../Redux/store";
 
 const menuItems = [
   { icon: <IoHomeOutline />, label: "Home" },
@@ -15,7 +16,7 @@ const menuItems = [
 ];
 
 const Tata = () => {
-  const showMenu = useSelector((state) => state.menu.showMenu);
+  const showMenu = useSelector((state:RootState) => state.menu.showMenu);
   const dispatch = useDispatch();
 
   const handleToggleMenu = () => dispatch(toggleMenu());
