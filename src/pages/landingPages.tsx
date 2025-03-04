@@ -9,11 +9,28 @@ import { useState, useEffect } from "react";
 import { IoIosArrowDown } from "react-icons/io";
 import LogoSlide from "../Components/Landing/slide";
 import Categories from "../Components/Landing/productCategory";
+import { useSelector, useDispatch } from "react-redux";
+import { toggleMenu } from "../Redux/slice/menuSlice";
+import { IoClose, IoSearch, IoHomeOutline } from "react-icons/io5";
+import { TbBrandAirtable } from "react-icons/tb";
+import { SiSalesforce } from "react-icons/si";
+import { RiTShirtLine } from "react-icons/ri";
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [showNavTitle, setShowNavTitle] = useState(false);
   const [showScrollText, setShowScrollText] = useState(true);
+
+  const menuItems = [
+    { icon: <IoHomeOutline />, label: "Home" },
+    { icon: <TbBrandAirtable />, label: "Brand" },
+    { icon: <SiSalesforce />, label: "Sales" },
+    { icon: <RiTShirtLine />, label: "Shirt" },
+  ];
+  const showMenu = useSelector((state) => state.menu.showMenu);
+  const dispatch = useDispatch();
+
+  const handleToggleMenu = () => dispatch(toggleMenu());
 
   const BestSeller = [
     {
@@ -61,8 +78,58 @@ const LandingPage = () => {
 
   return (
     <div className="">
+      {/* Navigarion bar */}
       <nav className="flex items-center justify-between  py-3 px-4 fixed top-0 left-0 w-full bg-white z-10  sm:w-full ">
-        <ReactSVG src={bar} className="text-white" />
+        {/* handle bar */}
+        <ReactSVG src={bar} className="text-white" onClick={handleToggleMenu} />
+        {showMenu && (
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            transition={{ duration: 0.5 }}
+            className="w-[245px] h-fit bg-white shadow-md rounded-lg absolute top-[4.9rem]"
+          >
+            <div className="flex justify-between items-center p-4 border-b border-gray-200">
+              <h1 className="text-lg font-bold">Menu</h1>
+              <IoClose
+                onClick={handleToggleMenu}
+                className="cursor-pointer text-lg text-gray-500 hover:text-gray-700"
+              />
+            </div>
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.5, opacity: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="w-[240px] h-[33px] flex justify-between items-center bg-[#D9D9D9] rounded-full px-2 my-2"
+            >
+              <h1 className="text-lg font-bold">Search</h1>
+              <IoSearch className="text-lg text-gray-500" />
+            </motion.div>
+            <motion.ul
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="flex flex-col gap-4 pt-2"
+            >
+              {menuItems.map((item, index) => (
+                <motion.li
+                  initial={{ y: 50, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  exit={{ y: 50, opacity: 0 }}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                  key={index}
+                  className="flex gap-4 items-center p-4 border-b border-gray-200"
+                >
+                  {item.icon}
+                  <h1 className="text-lg font-bold">{item.label}</h1>
+                </motion.li>
+              ))}
+            </motion.ul>
+          </motion.div>
+        )}
         <div className="flex gap-4 sm:hidden relative left-[-7rem]">
           <p>Home</p>
           <p>Brand</p>
@@ -85,16 +152,21 @@ const LandingPage = () => {
           <ReactSVG src={cart} className="w-5 h-5" />
         </div>
       </nav>
+
       {/* Hero Section */}
       <section className="flex items-center justify-between  ">
-        <img src={IMAGE.pc1} alt="" className="sm:w-full sm:h-[] " />
+        <img
+          src={IMAGE.pc1}
+          alt=""
+          className="sm:w-full sm:h-svh sm:object-cover "
+        />
         <motion.h1
           initial={{ opacity: 1, y: 0 }}
           animate={
             showNavTitle ? { opacity: 0, y: -100 } : { opacity: 1, y: 0 }
           }
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-          className="text-[7rem] w-full h-fit flex items-center justify-center sm:text-[2rem] font-bold text-white absolute "
+          className="text-[7rem] w-full h-fit flex items-center justify-center sm:text-[4rem] font-bold text-white absolute "
         >
           SN
         </motion.h1>
@@ -104,9 +176,9 @@ const LandingPage = () => {
             showScrollText ? { opacity: 1, y: 0 } : { opacity: 0, y: -100 }
           }
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.2, repeat: 1 }}
-          className=" absolute w-full h-fit flex items-center flex-col justify-center text-white bottom-3 animate-bounce sm:top-[10rem]"
+          className=" absolute w-full h-fit flex items-center flex-col justify-center text-white bottom-3 animate-bounce sm:top-[23rem]"
         >
-          <h1 className="text-xl sm:text-[8px] font-bold underline  ">
+          <h1 className="text-xl sm:text-[12px] font-bold underline  ">
             Scroll For More Product
           </h1>
           <IoIosArrowDown />

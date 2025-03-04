@@ -22,7 +22,7 @@ export default function Categories() {
         }}
         modules={[Pagination]}
         breakpoints={{
-          412: {
+          100: {
             slidesPerView: 2,
           },
           1024: {
