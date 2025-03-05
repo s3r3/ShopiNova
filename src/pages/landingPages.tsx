@@ -218,7 +218,7 @@ const LandingPage = () => {
                   <p className="text-gray-600 relative left-10">{item.price}</p>
                 </div>
                 <button
-                  onClick={() => handleRemoveFromCart(item.id)}
+                  onClick={() => handleRemoveFromCart(item.id as number)}
                   className="text-red-500 hover:text-red-700"
                 >
                   Remove
