@@ -16,6 +16,12 @@ import { TbBrandAirtable } from "react-icons/tb";
 import { SiSalesforce } from "react-icons/si";
 import { RiTShirtLine } from "react-icons/ri";
 import { RootState } from "../Redux/store";
+import {
+  toggleCart,
+  removeFromCart,
+  CartItem,
+  addToCart,
+} from "../Redux/slice/cartSlice";
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -28,18 +34,35 @@ const LandingPage = () => {
     { icon: <SiSalesforce />, label: "Sales" },
     { icon: <RiTShirtLine />, label: "Shirt" },
   ];
-  const showMenu = useSelector((state:RootState) => state.menu.showMenu);
+  const showMenu = useSelector(
+    (state: RootState) => state.reducer.menu.showMenu
+  );
+
+  const showCart = useSelector(
+    (state: RootState) => state.reducer.cart.cartToggle
+  );
+  const cartItems = useSelector(
+    (state: RootState) => state.reducer.cart.cartItems
+  );
   const dispatch = useDispatch();
 
   const handleToggleMenu = () => dispatch(toggleMenu());
+  const handleToggleCart = () => dispatch(toggleCart());
+  const handleRemoveFromCart = (id: number) => {
+    dispatch(removeFromCart(id));
+  };
+  const handleAddToCart = (product: CartItem) => {
+    dispatch(addToCart(product));
+  };
 
-  const BestSeller = [
+  const BestSeller: CartItem[] = [
     {
       id: 1,
       brand: "Nike",
       src: IMAGE.pc5,
       tittle: "Nike Air Force ",
       price: "$155",
+      type: "cart",
     },
     {
       id: 2,
@@ -47,6 +70,7 @@ const LandingPage = () => {
       src: IMAGE.pc6,
       tittle: "Speedy P9",
       price: "$1000",
+      type: "cart",
     },
     {
       id: 3,
@@ -54,6 +78,7 @@ const LandingPage = () => {
       src: IMAGE.pc7,
       tittle: "Hanasui Ceramide",
       price: "$70",
+      type: "cart",
     },
   ];
 
@@ -150,9 +175,59 @@ const LandingPage = () => {
         </div>
         <div className="flex gap-4">
           <ReactSVG src={profile} className="w-5 h-5" />
-          <ReactSVG src={cart} className="w-5 h-5" />
+          <ReactSVG src={cart} className="w-5 h-5" onClick={handleToggleCart} />
+
+          {cartItems.length > 0 && (
+            <span className="relative bg-red-500 text-white w-4 h-4 rounded-full flex items-center justify-center text-[10px] right-6 bottom-1">
+              {cartItems.length}
+            </span>
+          )}
         </div>
       </nav>
+      {/* tampilkan cart  */}
+
+      {showCart && (
+        <motion.div
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="fixed bottom-0 right-0 bg-white p-4 w-[300px] shadow-lg rounded-t-lg"
+        >
+          <div className="flex justify-between items-center p-4 border-b border-gray-200">
+            <h2 className="text-xl font-bold mb-4">Your Cart</h2>
+            <IoClose
+              onClick={handleToggleCart}
+              className="cursor-pointer text-lg text-gray-500 hover:text-gray-700"
+            />
+          </div>
+          <ul className="space-y-2">
+            {cartItems.map((item) => (
+              <motion.li
+                initial={{ opacity: 0, x: -100 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                key={item.id}
+                className="flex justify-between items-center"
+              >
+                <div className="flex gap-4">
+                  <img src={item.src} alt="" className="w-10 h-10" />
+                  <h3 className="font-semibold">
+                    {item.brand}
+                    {item.id}
+                  </h3>
+                  <p className="text-gray-600 relative left-10">{item.price}</p>
+                </div>
+                <button
+                  onClick={() => handleRemoveFromCart(item.id)}
+                  className="text-red-500 hover:text-red-700"
+                >
+                  Remove
+                </button>
+              </motion.li>
+            ))}
+          </ul>
+        </motion.div>
+      )}
 
       {/* Hero Section */}
       <section className="flex items-center justify-between  ">
@@ -249,6 +324,7 @@ const LandingPage = () => {
                 >
                   {item.price}
                 </motion.h1>
+                <button onClick={() => handleAddToCart(item)}>Shop Now</button>
               </div>
             </motion.div>
           ))}

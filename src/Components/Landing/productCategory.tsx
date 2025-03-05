@@ -2,15 +2,21 @@ import { motion } from "framer-motion";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
 import IMAGE from "../../assets/landing/IMAGE";
+import { CartItem,addToCart } from "../../Redux/slice/cartSlice";
+import { useDispatch } from "react-redux";
 
 export default function Categories() {
-  const categories = [
-    { id: "Shoe", src: IMAGE.pc8 },
-    { id: "Wear", src: IMAGE.pc2, whiteText: true },
-    { id: "Bag", src: IMAGE.pc3, whiteText: true },
-    { id: "SkinCare", src: IMAGE.pc4, whiteText: true },
-    { id: "Furniture", src: IMAGE.pc9, whiteText: true },
-  ];
+  const categories:CartItem[] = [
+    { id: "Shoe", src: IMAGE.pc8, type:'category' },
+    { id: "Wear", src: IMAGE.pc2, whiteText: true,type:'category'  },
+    { id: "Bag", src: IMAGE.pc3, whiteText: true,type:'category'  },
+    { id: "SkinCare", src: IMAGE.pc4, whiteText: true, type:'category'  },
+    { id: "Furniture", src: IMAGE.pc9, whiteText: true,type:'category'  },
+  ] ;
+  const dispatch = useDispatch();
+  const handleAddToCart = (product:CartItem)=>{
+      dispatch(addToCart(product))
+    }
 
   return (
     <>
@@ -41,7 +47,7 @@ export default function Categories() {
             >
               <img
                 src={category.src}
-                alt={category.id}
+                
                 className="w-full h-object-cover h-[25rem] sm:h-[15rem]"
               />
               <motion.div
@@ -58,7 +64,7 @@ export default function Categories() {
                 >
                   {category.id}
                 </h2>
-                <button className="w-[157px] h-[30px] bg-black rounded-full text-white mt-2">
+                <button className="w-[157px] h-[30px] bg-black rounded-full text-white mt-2" onClick={()=>handleAddToCart(category)}>
                   Shop Now
                 </button>
               </motion.div>
