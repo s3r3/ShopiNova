@@ -22,12 +22,20 @@ import {
   CartItem,
   addToCart,
 } from "../Redux/slice/cartSlice";
+import useOutsideClick from "../hooks/useOutsideClick";
 
 const LandingPage = () => {
   const [scrollY, setScrollY] = useState(0);
   const [showNavTitle, setShowNavTitle] = useState(false);
   const [showScrollText, setShowScrollText] = useState(true);
-
+  
+  const ref = useOutsideClick(() => {
+    handleToggleMenu()
+    
+  });
+  const refCart = useOutsideClick(()=>{
+    handleToggleCart()
+  })
   const menuItems = [
     { icon: <IoHomeOutline />, label: "Home" },
     { icon: <TbBrandAirtable />, label: "Brand" },
@@ -108,8 +116,10 @@ const LandingPage = () => {
       <nav className="flex items-center justify-between  py-3 px-4 fixed top-0 left-0 w-full bg-white z-10  sm:w-full ">
         {/* handle bar */}
         <ReactSVG src={bar} className="text-white" onClick={handleToggleMenu} />
-        {showMenu && (
+
+        {showMenu  &&(
           <motion.div
+            ref={ref}
             initial={{ x: -300, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: -300, opacity: 0 }}
@@ -188,10 +198,11 @@ const LandingPage = () => {
 
       {showCart && (
         <motion.div
-          initial={{ opacity: 0, y: 100 }}
-          animate={{ opacity: 1, y: 0 }}
+        ref={refCart}
+          initial={{ opacity: 0, y: 0 }}
+          animate={{ opacity: 1, y: 50 }}
           transition={{ duration: 0.5 }}
-          className="fixed bottom-0 right-0 bg-white p-4 w-[300px] shadow-lg rounded-t-lg"
+          className="fixed z-[9999] top-10 right-0 bg-white p-4 w-[300px] shadow-lg rounded-t-lg"
         >
           <div className="flex justify-between items-center p-4 border-b border-gray-200">
             <h2 className="text-xl font-bold mb-4">Your Cart</h2>

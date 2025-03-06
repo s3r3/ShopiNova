@@ -35,6 +35,7 @@ export default function Categories() {
             slidesPerView: 5,
           },
         }}
+        className=""
       >
         {categories.map((category, index) => (
           <SwiperSlide key={index}>
