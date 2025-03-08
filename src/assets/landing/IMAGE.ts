@@ -13,6 +13,7 @@ import lg3 from './6631d9f7-e0a2-4d0b-a159-1b7ed7ddff97_removalai_preview 1.png'
 import lg4 from './9817563c-e197-4e9c-aa52-4cb0bb3cb29b_removalai_preview 1.png'
 import lg5 from './bbd49d9a-e92b-4391-b743-9a52091650da_removalai_preview 1.png'
 import lg6 from './e2cec233-1db0-4c5f-afdd-5140232df30b_removalai_preview 1.png'
+import logo from '../shopi logo.png'
 const IMAGE = {
     pc1,
     pc2,
@@ -29,7 +30,8 @@ const IMAGE = {
     lg3,
     lg4,
     lg5,
-    lg6
+    lg6,
+    logo
 }
 
 

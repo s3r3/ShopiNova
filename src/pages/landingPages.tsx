@@ -211,14 +211,15 @@ const LandingPage = () => {
             Sale
           </motion.p>
         </motion.div>
-        <motion.h1
+
+        <motion.img
+          src={IMAGE.logo}
+          alt=""
           initial={{ opacity: 0, y: 20 }}
           animate={showNavTitle ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
-          className="flex relative left-[5rem] sm:mx-auto sm:text-center sm:text-sm sm:items-center sm:justify-center sm:relative sm:left-[1.2rem] font-medium text-lg  "
-        >
-          ShopiNova
-        </motion.h1>
+          className="flex relative left-[5rem] sm:mx-auto sm:text-center sm:w-[6rem] sm:items-center sm:justify-center sm:relative sm:left-[1.2rem] font-medium text-lg  w-[10rem] h-fit "
+        />
         <div className="w-[316px] h-[44px] bg-[#D9D9D9]  rounded-full flex items-center justify-between px-4 relative left-[6rem] sm:hidden                               ">
           <input
             type="text"
@@ -267,7 +268,9 @@ const LandingPage = () => {
               >
                 <div className="flex items-center sm:w-full">
                   <img src={item.src} alt="" className="w-10 h-10 rounded-lg" />
-                  <h3 className="font-semibold text-sm pr-4 pl-1 w-[9rem]">{item.brand}</h3>
+                  <h3 className="font-semibold text-sm pr-4 pl-1 w-[9rem]">
+                    {item.brand}
+                  </h3>
                   <div className="flex  items-center gap-4 w-[10rem] h-fit justify-end ">
                     <button
                       onClick={() => handleDecrement(Number(item.id))}
@@ -284,8 +287,10 @@ const LandingPage = () => {
                     </button>
                   </div>
                 </div>
-                <FaRegTrashAlt onClick={()=>handleRemoveFromCart(item.id as number)} className="hover:text-red-500"/>
-                
+                <FaRegTrashAlt
+                  onClick={() => handleRemoveFromCart(item.id as number)}
+                  className="hover:text-red-500"
+                />
               </motion.li>
             ))}
           </ul>
@@ -343,7 +348,7 @@ const LandingPage = () => {
       <div className=" flex flex-col justify-center items-center gap-2 pt-10">
         <h1 className="text-xl font-bold uppercase">Best Seller</h1>
 
-        <div className="flex flex-wrap  justify-center">
+        <div className="flex justify-end sm:justify-center sm:flex-wrap gap-4">
           {BestSeller.map((item) => (
             <motion.div
               key={item.id}
@@ -351,44 +356,24 @@ const LandingPage = () => {
               whileInView={{ y: 0, opacity: 1 }}
               viewport={{ once: false }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="flex flex-col justify-center  items-center w-[236px] h-[350px]"
+              className="bg-white rounded-lg shadow-md w-[250px]   flex flex-col justify-center items-center"
             >
-              <motion.img
-                initial={{ scale: 0.5 }}
-                whileInView={{ scale: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+              <img
                 src={item.src}
-                alt={item.tittle}
-                className="w-fit h-[236px]"
+                alt=""
+                className="w-full h-64 object-cover rounded-lg"
               />
-              <div className="flex flex-col sm:relative sm:left-[-3rem] relative left-[-3rem] ">
-                <motion.h1
-                  initial={{ y: 50, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-                >
-                  {item.brand}
-                </motion.h1>
-                <motion.h1
-                  initial={{ y: 50, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: "easeOut", delay: 0.4 }}
-                >
-                  {item.tittle}
-                </motion.h1>
-                <motion.h1
-                  initial={{ y: 50, opacity: 0 }}
-                  whileInView={{ y: 0, opacity: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, ease: "easeOut", delay: 0.6 }}
-                >
-                  {item.price}
-                </motion.h1>
-                <button onClick={() => handleAddToCart(item)}>Shop Now</button>
-              </div>
+              <h1 className="text-lg font-bold text-gray-700 mt-4">
+                {item.brand}
+              </h1>
+              <h1 className="text-lg font-bold text-gray-700">{item.tittle}</h1>
+              <h1 className="text-lg font-bold text-gray-700">{item.price}</h1>
+              <button
+                onClick={() => handleAddToCart(item)}
+                className="bg-orange-500 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg mt-4 mb-3"
+              >
+                Shop Now
+              </button>
             </motion.div>
           ))}
         </div>
