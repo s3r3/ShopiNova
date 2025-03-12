@@ -1,0 +1,5 @@
+{
+  "version": 2,
+  "rewrites": [{ "src": "./file.js", "use":"@vercel/node" }],
+  "routes":[{"src":"/(.*)", "dest":"/"}]
+}
