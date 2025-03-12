@@ -8,8 +8,8 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js",
-    "postinstall": "cd ../shopi && npm install && npm run build"
+    "start": "nodemon ./server.js",
+    "postinstall": "npm install"
   },
   "dependencies": {
     "cors": "^2.8.5",
