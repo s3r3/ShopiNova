@@ -1,1 +1,15 @@
-{ "version": 2, "rewrites": [{ "source": "/(.*)", "destination": "/Server" }] }
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "shopi/index.js",
+      "use": "@vercel/static-build"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/"
+    }
+  ]
+}
