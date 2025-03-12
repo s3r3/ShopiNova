@@ -22,7 +22,8 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist ",
-    "clean": "gh-pages-clean"
+    "clean": "gh-pages-clean",
+    "postinstall": "cd ../Server && npm install && node server.js "
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
