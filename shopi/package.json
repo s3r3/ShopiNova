@@ -1,16 +1,8 @@
 {
-  "name": "shopinova",
+  "name": "shopi",
   "version": "0.0.0",
   "private": true,
   "description": "This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.",
-  "homepage": "https://github.com/s3r3/ShopiNova#readme",
-  "bugs": {
-    "url": "https://github.com/s3r3/ShopiNova/issues"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/s3r3/ShopiNova.git"
-  },
   "license": "ISC",
   "author": "Farid",
   "type": "module",
@@ -22,8 +14,7 @@
     "preview": "vite preview",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist ",
-    "clean": "gh-pages-clean",
-    "postinstall": "cd ../Server && npm install && node server.js "
+    "clean": "gh-pages-clean"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.6.0",
