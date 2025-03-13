@@ -1,8 +1,12 @@
 // server.js/server.ts
 const { Pool } = require('pg');
-require('dotenv').config();
 
 const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'mydatabase',
+    password: '3YD7823',
+    port: 5432,
   connectionString: process.env.DATABASE_URL,
 });
 
@@ -16,4 +20,4 @@ pool.connect((err) => {
 });
 
 module.exports = pool;
-
+module.exports = pool;
