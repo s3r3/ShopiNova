@@ -9,3 +9,6 @@
 .light{
     @apply bg-white text-gray-900
 }
+.input-placeholder{
+    color: black;
+}
