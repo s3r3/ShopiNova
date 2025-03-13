@@ -24,7 +24,7 @@ app.use(express.json());
 // CRUD API
 
 // Create
-app.post("/api/contacts", async (req, res) => {
+app.post("/api/contact", async (req, res) => {
     try {
         const { email, phone } = req.body;
         const result = await pool.query(
