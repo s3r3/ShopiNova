@@ -37,6 +37,7 @@ app.post("/api/contact", async (req, res) => {
         return res.status(500).json({ message: "Gagal membuat data kontak" });
     }
 });
+app.get("/api/test", (req,res)=>res.send('haiiiiiiii'))
 
 // Read
 app.get("/api/contacts", async (req, res) => {
