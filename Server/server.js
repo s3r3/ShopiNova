@@ -1,18 +1,10 @@
-// Server/server.js (versi 2)
-const express = require('express');
-const cors = require('cors');
+// Server/server.js
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const port = 3001; // Port yang digunakan oleh client
-const { Pool } = require('pg');
+const port = 3001; // Sesuaikan dengan port yang digunakan di frontend
+const pool = require("./Databases/file");
 
-// Databases
-const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'mydatabase',
-  password: '3YD7823',
-  port: 5432,
-});
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -33,7 +25,6 @@ app.post("/api/contacts", async (req, res) => {
     return res.status(500).json({ message: "Gagal mengambil data kontak" });
   }
 });
-
 // Read
 app.get("/api/contacts", async (req, res) => {
   try {
