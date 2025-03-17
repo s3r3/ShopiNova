@@ -1,280 +1,285 @@
 // shopi/src/pages/checkOut.tsx
 import axios from "axios";
 import { useState } from "react";
+import {
+  CitySelect,
+  CountrySelect,
+  StateSelect,
+} from "react-country-state-city";
+import "react-country-state-city/dist/react-country-state-city.css";
 
-/**
- * Checkout page component
- * @returns JSX Element
- */
 const CheckOUT = () => {
-  // State untuk menyimpan input user
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zipCode, setZipCode] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [cardNumber, setCardNumber] = useState("");
-  const [cardName, setCardName] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [countryid, setCountryid] = useState(0);
+  const [stateid, setstateid] = useState(0);
+  const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [zipCode, setZipCode] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [countryId, setCountryId] = useState("");
+  const [stateId, setStateId] = useState("");
 
-  /**
-   * Handle form submit
-   * @param e React Form Event
-   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validasi input
-    if (!email || !phone || !firstName || !lastName || !address || !city || !state || !zipCode || !paymentMethod || !cardNumber || !cardName) {
-      setError("Harap isi semua field");
-      return;
-    }
-
+    // Periksa nilai input
+    console.log("Nilai input:", {
+      email,
+      phone,
+      countryId,
+      stateId,
+      address,
+      city,
+      zipCode,
+      firstName,
+      lastName,
+    });
     try {
-      // Kirim request ke endpoint API
-      const data = {
-        email,
-        phone,
-        firstName,
-        lastName,
+      const contactData = { email, phone };
+      const deliveryData = {
+        country: countryid,
+        state: stateid,
         address,
         city,
-        state,
-        zipCode,
-        paymentMethod,
-        cardNumber,
-        cardName
+        zip_code: zipCode,
+        first_name: firstName,
+        last_name: lastName,
       };
-      const response = await axios.post("http://localhost:3001/api/contacts", data);
 
-      if (response.status === 200) {
-        // Penyimpanan kontak berhasil
-        setSuccess("Kontak berhasil disimpan!");
-        setError(null);
-      } else {
-        // Penyimpanan kontak gagal
-        setError(response.data.message || "Gagal menyimpan kontak");
-        setSuccess(null);
+      const [responseContact, responseDelivery] = await Promise.all([
+        axios.post("http://localhost:3001/api/contacts", contactData),
+        axios.post("http://localhost:3001/api/deliveries", deliveryData),
+      ]);
+
+      // Periksa respons server
+      console.log("Respons server:", {
+        responseContact,
+        responseDelivery,
+      });
+
+      if (responseContact.status !== 200 || responseDelivery.status !== 200) {
+        throw new Error("Gagal menyimpan data");
       }
 
+      setSuccess("Data berhasil disimpan!");
+      setError(null);
       // Reset form
       setEmail("");
       setPhone("");
-      setFirstName("");
-      setLastName("");
       setAddress("");
       setCity("");
-      setState("");
       setZipCode("");
-      setPaymentMethod("");
-      setCardNumber("");
-      setCardName("");
+      setFirstName("");
+      setLastName("");
+      setCountryId("");
+      setStateId("");
     } catch (err) {
-      // Error menyimpan kontak
       setError(err instanceof Error ? err.message : "Terjadi kesalahan");
       setSuccess(null);
     }
   };
 
   return (
-    // Section Checkout
     <div className="max-w-xl mx-auto mt-10 p-4 bg-white rounded-lg shadow-md">
-      <h1 className="text-2xl font-bold mb-4">Checkout</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Section Informasi Pengirim */}
-        <div className="flex flex-col">
-          <label className="text-lg font-medium mb-2" htmlFor="email">
-            Email:
-          </label>
-          <input
-            id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-2 border rounded-lg"
-            placeholder="contoh@email.com"
-            required
-          />
-        </div>
-
-        <div className="flex flex-col gap-2">
-          <label className="text-lg font-medium mb-2" htmlFor="country">
-            Delivery
-          </label>
-          <input
-            id="country"
-            type="text"
-            onChange={(e) => setPhone(e.target.value)}
-            className="p-2 border rounded-lg"
-            placeholder="[MY] Malaysia"
-            required
-          />
-          <div className="flex justify-between">
+      {/* section left */}
+      <div>
+        <h1 className="text-2xl font-bold mb-4">Checkout</h1>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="flex flex-col">
+            <label className="text-lg font-medium mb-2" htmlFor="email">
+              Email:
+            </label>
             <input
-              type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First Name"
-              className="p-2 border rounded-lg w-[266px]"
-              required
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last Name"
-              className="p-2 border rounded-lg w-[266px]"
+              id="email"
+              onChange={(e) => setEmail(e.target.value)}
+              className="p-2 border rounded-lg"
+              placeholder="contoh@email.com"
               required
             />
           </div>
-          <input
-            type="text"
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Adress"
-            className="p-2 border rounded-lg"
-            required
-          />
 
-          <div className="flex gap-2 justify-between">
+          <div className="flex flex-col gap-2">
+            <label className="text-lg font-medium mb-2" htmlFor="country">
+              Delivery
+            </label>
+            <CountrySelect
+              onChange={(e) => {
+                const state = e as { id: number; name: string };
+                setCountryid(state.id);
+                setCountryId(state.name);
+              }}
+              placeHolder="Select Country"
+              className="p-2 border rounded-lg"
+            />
+            <div className=" flex justify-between ">
+              <input
+                type="text"
+                name="first_name"
+                id="first_name"
+                placeholder=" First Name"
+                onChange={(e) => setFirstName(e.target.value)}
+                className="p-2 border rounded-lg   w-[266px]"
+              />
+              <input
+                type="text"
+                name="last_name"
+                id="last_name"
+                placeholder=" Last Name"
+                onChange={(e) => setLastName(e.target.value)}
+                className="p-2 border rounded-lg w-[266px]"
+              />
+            </div>
+
             <input
               type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setCity(e.target.value)}
-              placeholder="City"
-              className="p-2 border rounded-lg w-[171px]"
+              name="address"
+              id="address"
+              placeholder="Adress"
+              onChange={(e) => setAddress(e.target.value)}
+              className="p-2 border rounded-lg"
+            />
+
+            <div className=" flex gap-2 justify-between">
+              <StateSelect
+                disabled={!countryid}
+                countryid={countryid}
+                onChange={(e) => {
+                  const state = e as { id: number; name: string };
+                  setstateid(state.id);
+                  setStateId(state.name)
+                }}
+                placeHolder="Select State"
+                className="p-2 border rounded-lg w-[171px]"
+              />
+              <CitySelect
+                disabled={!stateid}
+                countryid={countryid}
+                stateid={stateid}
+                onChange={(e) => {
+                  const state = e as { id: number; name: string };
+                  console.log(state.id);
+                  setCity(state.name);
+                }}
+                placeHolder="Select City"
+                className="p-2 border rounded-lg w-[171px]"
+              />
+              <input
+                type="text"
+                name="zip_code"
+                id="zip_code"
+                placeholder=" Zip Code"
+                onChange={(e) => setZipCode(e.target.value)}
+                className="p-2 border rounded-lg w-[171px]"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <div className="w-[30px] h-[30px] bg-black" />
+            <p className="text-lg">Save This Information For Next Time</p>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label> Shipping Method</label>
+            <div className=" flex justify-between ">
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" Paypall"
+                className="p-2 border rounded-lg   w-[266px]"
+              />
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" BCA"
+                className="p-2 border rounded-lg w-[266px]"
+              />
+            </div>
+            <div className=" flex justify-between ">
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" Shopee Pay"
+                className="p-2 border rounded-lg   w-[266px]"
+              />
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" BRI"
+                className="p-2 border rounded-lg w-[266px]"
+              />
+            </div>
+            <div className=" flex justify-between ">
+              <input
+                type="Dana"
+                name="text"
+                id="text"
+                placeholder=" First Name"
+                className="p-2 border rounded-lg   w-[266px]"
+              />
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" QRIS"
+                className="p-2 border rounded-lg w-[266px]"
+              />
+            </div>
+          </div>
+
+          <div className="w-550 border-2 p-2  border-black flex flex-col gap-2 rounded-lg">
+            <div className="p-2">
+              <label htmlFor="Payment">Payment</label>
+            </div>
+            {/* <div className="w-[550px]  h-[1px] bg-black"/> */}
+            <input
+              type="text"
+              placeholder="No. Card"
+              className="p-2 border-2 border-black rounded-lg w-full"
+            />
+            <div className=" flex justify-between gap-2">
+              <input
+                type="Dana"
+                name="text"
+                id="text"
+                placeholder=" First Name"
+                className="p-2 border rounded-lg   w-[266px]"
+              />
+              <input
+                type="text"
+                name="text"
+                id="text"
+                placeholder=" QRIS"
+                className="p-2 border rounded-lg w-[266px]"
+              />
+            </div>
+            <input
+              type="text"
+              placeholder="Name on Card"
+              className="p-2 border-2 border-black rounded-lg w-full input  "
               required
             />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setState(e.target.value)}
-              placeholder="State"
-              className="p-2 border rounded-lg w-[171px]"
-              required
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setZipCode(e.target.value)}
-              placeholder="Zip Code"
-              className="p-2 border rounded-lg w-[171px]"
-              required
-            />
           </div>
-        </div>
 
-        {/* Section Metode Pembayaran */}
-        <div className="flex flex-col gap-2">
-          <label>Shipping Method</label>
-          <div className="flex justify-between">
-            <input
-              type="text"
-              name="text"
-              id="text"
-              onChange={(e) => setPaymentMethod(e.target.value)}
-              placeholder="Paypall"
-              className="p-2 border rounded-lg w-[266px]"
-              required
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="BCA"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-          </div>
-          <div className="flex justify-between">
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="Shopee Pay"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="BRI"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-          </div>
-          <div className="flex justify-between">
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="Dana"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="QRIS"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-          </div>
-        </div>
+          <button
+            type="submit"
+            className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Pay Now
+          </button>
 
-        {/* Section Informasi Kartu */}
-        <div className="w-550 border-2 p-2 border-black flex flex-col gap-2 rounded-lg">
-          <div className="p-2">
-            <label htmlFor="Payment">Payment</label>
-          </div>
-          <input
-            type="text"
-            onChange={(e) => setCardNumber(e.target.value)}
-            placeholder="No. Card"
-            className="p-2 border-2 border-black rounded-lg w-full"
-            required
-          />
-          <div className="flex justify-between gap-2">
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="First Name"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-            <input
-              type="text"
-              name="text"
-              id="text"
-              placeholder="QRIS"
-              className="p-2 border rounded-lg w-[266px]"
-            />
-          </div>
-          <input
-            type="text"
-            onChange={(e) => setCardName(e.target.value)}
-            placeholder="Name on Card"
-            className="p-2 border-2 border-black rounded-lg w-full"
-            required
-          />
-        </div>
-
-        {/* Tombol Submit */}
-        <button
-          type="submit"
-          className="w-full py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-        >
-          Pay Now
-        </button>
-
-        {/* Error dan Success Message */}
-        {error && <div className="text-red-500 mt-2">{error}</div>}
-        {success && <div className="text-green-500 mt-2">{success}</div>}
-      </form>
+          {error && <div className="text-red-500 mt-2">{error}</div>}
+          {success && <div className="text-green-500 mt-2">{success}</div>}
+        </form>
+      </div>
     </div>
   );
 };
