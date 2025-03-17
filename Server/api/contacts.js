@@ -1,83 +1,117 @@
 // Server/api/contacts.js
 const express = require("express");
 const router = express.Router();
-const pool = require("../file"); // asumsi file pool terletak di folder yang sama dengan server.js
-
+const pool = require("../file");
 // Create
-router.post("/", async (req, res) => {
-  try {
+router.post("/", (req, res) => {
     const { email, phone } = req.body;
-    const result = await pool.query(
-      "INSERT INTO contacts (email, phone) VALUES ($1, $2) RETURNING *",
-      [email, phone]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Gagal mengambil data kontak" });
+
+  // Validasi data
+  if (!email || !phone) {
+    res.status(400).json({ message: "Harap isi semua field" });
+    return;
   }
+
+  // Simpan data kontak ke database
+  const query = {
+    text: "INSERT INTO contacts (email, phone) VALUES ($1, $2) RETURNING *",
+    values: [email, phone],
+  };
+
+  pool.query(query, (err, results) => {
+    if (err) {
+    console.error(err);
+      res.status(500).json({ message: "Gagal menyimpan kontak" });
+    } else {
+      res.status(201).json(results.rows[0]);
+  }
+});
 });
 
 // Read
-router.get("/", async (req, res) => {
-  try {
-    const result = await pool.query("SELECT * FROM contacts");
-    res.json(result.rows);
-  } catch (err) {
+router.get("/", (req, res) => {
+  const query = {
+    text: "SELECT * FROM contacts",
+  };
+
+  pool.query(query, (err, results) => {
+    if (err) {
     console.error(err);
-    return res.status(500).json({ message: "Gagal mengambil data kontak" });
+      res.status(500).json({ message: "Gagal mengambil data kontak" });
+    } else {
+      res.json(results.rows);
   }
+});
 });
 
 // Read by ID
-router.get("/:id", async (req, res) => {
-  try {
+router.get("/:id", (req, res) => {
     const id = req.params.id;
-    const result = await pool.query("SELECT * FROM contacts WHERE id = $1", [
-      id,
-    ]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "Kontak tidak ditemukan" });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
+
+  const query = {
+    text: "SELECT * FROM contacts WHERE id = $1",
+    values: [id],
+  };
+
+  pool.query(query, (err, results) => {
+    if (err) {
     console.error(err);
-    return res.status(500).json({ message: "Gagal mengambil data kontak" });
+      res.status(500).json({ message: "Gagal mengambil data kontak" });
+    } else if (results.rows.length === 0) {
+      res.status(404).json({ message: "Kontak tidak ditemukan" });
+    } else {
+      res.json(results.rows[0]);
   }
+});
 });
 
 // Update
-router.put("/:id", async (req, res) => {
-  try {
+router.put("/:id", (req, res) => {
     const id = req.params.id;
     const { email, phone } = req.body;
-    const result = await pool.query(
-      "UPDATE contacts SET email = $1, phone = $2 WHERE id = $3 RETURNING *",
-      [email, phone, id]
-    );
-    if (result.rows.length === 0) {
-      return res.status(404).json({ message: "Kontak tidak ditemukan" });
-    }
-    res.json(result.rows[0]);
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ message: "Gagal mengupdate kontak" });
+
+  // Validasi data
+  if (!email || !phone) {
+    res.status(400).json({ message: "Harap isi semua field" });
+    return;
   }
+
+  const query = {
+    text: "UPDATE contacts SET email = $1, phone = $2 WHERE id = $3 RETURNING *",
+    values: [email, phone, id],
+  };
+
+  pool.query(query, (err, results) => {
+    if (err) {
+    console.error(err);
+      res.status(500).json({ message: "Gagal mengupdate kontak" });
+    } else if (results.rows.length === 0) {
+      res.status(404).json({ message: "Kontak tidak ditemukan" });
+    } else {
+      res.json(results.rows[0]);
+  }
+});
 });
 
 // Delete
-router.delete("/:id", async (req, res) => {
-  try {
+router.delete("/:id", (req, res) => {
     const id = req.params.id;
-    const result = await pool.query("DELETE FROM contacts WHERE id = $1", [id]);
-    if (result.rowCount === 0) {
-      return res.status(404).json({ message: "Kontak tidak ditemukan" });
-    }
-    res.json({ message: "Kontak berhasil dihapus" });
-  } catch (err) {
+
+  const query = {
+    text: "DELETE FROM contacts WHERE id = $1",
+    values: [id],
+  };
+
+  pool.query(query, (err, results) => {
+    if (err) {
     console.error(err);
-    return res.status(500).json({ message: "Gagal menghapus kontak" });
+      res.status(500).json({ message: "Gagal menghapus kontak" });
+    } else if (results.rowCount === 0) {
+      res.status(404).json({ message: "Kontak tidak ditemukan" });
+    } else {
+      res.json({ message: "Kontak berhasil dihapus" });
   }
+});
 });
 
 module.exports = router;

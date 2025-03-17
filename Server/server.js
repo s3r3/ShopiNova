@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const port = 3001; // Sesuaikan dengan port yang digunakan di frontend
+const port = 3001; 
 const stripeRouter = require("./api/stripe");
 const contactsRouter = require("./api/contacts");
 
