@@ -1,0 +1,4 @@
+// Server/config/stripeConfig.js
+const STRIPE_PUBLISHABLE_KEY = 'pk_test_51R2z4lJiew9lcVGNvyrPKgGMTp3hOSFe0sJxVtbuaRhT5c0ujuq7vkDKdxCuVfTp0d8wrr5KjqDxli6tLOkm1jBV00BxZIMMW1';
+const STRIPE_SECRET_KEY = 'sk_test_51R2z4lJiew9lcVGNDPaywVCXiaNlrBs0ZI0D1JyOyn4TQOLQHIDFGFnFHE2DUPgKJ3HLgu7jimC2eErXXdoK5fWs00XBxlsR6A';
+module.exports = { STRIPE_PUBLISHABLE_KEY, STRIPE_SECRET_KEY };
