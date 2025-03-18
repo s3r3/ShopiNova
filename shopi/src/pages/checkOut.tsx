@@ -1,6 +1,6 @@
 // shopi/src/pages/checkOut.tsx
 import axios from "axios";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import useLocalStorage from "../hooks/userLocalStorage";
 import {
   CitySelect,
@@ -8,6 +8,15 @@ import {
   StateSelect,
 } from "react-country-state-city";
 import "react-country-state-city/dist/react-country-state-city.css";
+
+const shippingMethods = [
+  { id: 1, name: "Paypall" },
+  { id: 2, name: "BCA" },
+  { id: 3, name: "Shopee Pay" },
+  { id: 4, name: "BRI" },
+  { id: 5, name: "Dana" },
+  { id: 6, name: "QRIS" },
+]
 
 const CheckOUT = () => {
   const [email, setEmail] = useState("");
@@ -23,6 +32,8 @@ const CheckOUT = () => {
   const [lastName, setLastName] = useState("");
   const [countryId, setCountryId] = useState("");
   const [stateId, setStateId] = useState("");
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('')
+  const [paymentLabel, setPaymentLabel] = useState('Payment')
   const [checkoutInfo, setCheckoutInfo, removeCheckoutInfo] = useLocalStorage(
     'checkoutInfo',{
       email: "",
@@ -51,6 +62,11 @@ const CheckOUT = () => {
   }
   const handleRemove = () => {
     removeCheckoutInfo()
+  }
+  const handleShippingMethodChange = (event:React.ChangeEvent<HTMLSelectElement | HTMLInputElement>)=>{
+    const selectedMethod = event.target.value
+    setSelectedShippingMethod(selectedMethod)
+    setPaymentLabel(selectedMethod)
   }
   useEffect(() => {
     if (checkoutInfo) {
@@ -239,59 +255,36 @@ const CheckOUT = () => {
 
           <div className="flex flex-col gap-2">
             <label> Shipping Method</label>
-            <div className=" flex justify-between ">
-              <input
-                type="text"
-                name="text"
-                id="text"
-                placeholder=" Paypall"
-                className="p-2 border rounded-lg   w-[266px]"
-              />
-              <input
-                type="text"
-                name="text"
-                id="text"
-                placeholder=" BCA"
-                className="p-2 border rounded-lg w-[266px]"
-              />
-            </div>
-            <div className=" flex justify-between ">
-              <input
-                type="text"
-                name="text"
-                id="text"
-                placeholder=" Shopee Pay"
-                className="p-2 border rounded-lg   w-[266px]"
-              />
-              <input
-                type="text"
-                name="text"
-                id="text"
-                placeholder=" BRI"
-                className="p-2 border rounded-lg w-[266px]"
-              />
-            </div>
-            <div className=" flex justify-between ">
-              <input
-                type="Dana"
-                name="text"
-                id="text"
-                placeholder=" First Name"
-                className="p-2 border rounded-lg   w-[266px]"
-              />
-              <input
-                type="text"
-                name="text"
-                id="text"
-                placeholder=" QRIS"
-                className="p-2 border rounded-lg w-[266px]"
-              />
+            <div className="grid grid-cols-2 gap-2 ">
+              {shippingMethods.map((method) => (
+                <div key={method.id} className="flex justify-center ">
+                  <input
+                    type="radio"
+                    id={method.name}
+                    name="shippingMethod"
+                    value={method.name}
+                    checked={selectedShippingMethod === method.name}
+                    onChange={handleShippingMethodChange}
+                    className="hidden "
+                  />
+                  <label
+                    htmlFor={method.name}
+                    className={`${
+                      selectedShippingMethod === method.name
+                        ? "bg-blue-500 text-white"
+                        : "bg-white hover:bg-gray-300"
+                    }   cursor-pointer p-2 border rounded-lg w-[266px]`}
+                  >
+                    {method.name}
+                  </label>
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="w-550 border-2 p-2  border-black flex flex-col gap-2 rounded-lg">
             <div className="p-2">
-              <label htmlFor="Payment">Payment</label>
+              <label htmlFor="Payment">{paymentLabel}</label>
             </div>
             {/* <div className="w-[550px]  h-[1px] bg-black"/> */}
             <input
