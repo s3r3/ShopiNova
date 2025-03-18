@@ -46,6 +46,7 @@ function Test() {
             onChange={(e) => {
               const state = e as { id: number; name: string };
               console.log(state.id);
+              // setStateId(state.name);
             }}
             placeHolder="Select City"
             className="block w-full pl-10 py-2 text-base text-gray-700 bg-gray-100 border border-gray-300 rounded focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm"

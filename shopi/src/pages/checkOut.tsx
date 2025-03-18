@@ -1,6 +1,7 @@
 // shopi/src/pages/checkOut.tsx
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useLocalStorage from "../hooks/userLocalStorage";
 import {
   CitySelect,
   CountrySelect,
@@ -13,8 +14,8 @@ const CheckOUT = () => {
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
-  const [countryid, setCountryid] = useState(0);
-  const [stateid, setstateid] = useState(0);
+  const [countryid, setCountryid] = useState("");
+  const [stateid, setstateid] = useState("");
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [zipCode, setZipCode] = useState("");
@@ -22,6 +23,48 @@ const CheckOUT = () => {
   const [lastName, setLastName] = useState("");
   const [countryId, setCountryId] = useState("");
   const [stateId, setStateId] = useState("");
+  const [checkoutInfo, setCheckoutInfo, removeCheckoutInfo] = useLocalStorage(
+    'checkoutInfo',{
+      email: "",
+      phone: "",
+      countryId: "",
+      stateId: "",
+      address: "",
+      city: "",
+      zipCode: "",
+      firstName: "",
+      lastName: "",
+    }
+  )
+  const handleSave = () => {
+    setCheckoutInfo({
+      email: email,
+      phone: phone,
+      countryId: countryId,
+      stateId: stateId,
+      address: address,
+      city: city,
+      zipCode: zipCode,
+      firstName: firstName,
+      lastName: lastName
+    })
+  }
+  const handleRemove = () => {
+    removeCheckoutInfo()
+  }
+  useEffect(() => {
+    if (checkoutInfo) {
+      setEmail(checkoutInfo.email)
+      setPhone(checkoutInfo.phone)
+      setCountryId(checkoutInfo.countryId)
+      setStateId(checkoutInfo.stateId)
+      setAddress(checkoutInfo.address)
+      setCity(checkoutInfo.city)
+      setZipCode(checkoutInfo.zipCode)
+      setFirstName(checkoutInfo.firstName)
+      setLastName(checkoutInfo.lastName)
+    }
+  },[checkoutInfo])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -41,8 +84,8 @@ const CheckOUT = () => {
     try {
       const contactData = { email, phone };
       const deliveryData = {
-        country: countryid,
-        state: stateid,
+        country: countryId,
+        state: stateId,
         address,
         city,
         zip_code: zipCode,
@@ -109,7 +152,7 @@ const CheckOUT = () => {
             <CountrySelect
               onChange={(e) => {
                 const state = e as { id: number; name: string };
-                setCountryid(state.id);
+                setCountryid(state.id.toString());
                 setCountryId(state.name);
               }}
               placeHolder="Select Country"
@@ -146,19 +189,21 @@ const CheckOUT = () => {
             <div className=" flex gap-2 justify-between">
               <StateSelect
                 disabled={!countryid}
-                countryid={countryid}
+                countryid={parseInt(countryid, 10)}
+                
                 onChange={(e) => {
                   const state = e as { id: number; name: string };
-                  setstateid(state.id);
-                  setStateId(state.name)
+                  console.log(state.id);
+                  setstateid(state.id.toString());
+                  setStateId(state.name);
                 }}
                 placeHolder="Select State"
                 className="p-2 border rounded-lg w-[171px]"
               />
               <CitySelect
                 disabled={!stateid}
-                countryid={countryid}
-                stateid={stateid}
+                countryid={parseInt(countryid, 10)}
+                stateid={parseInt(stateid, 10)}
                 onChange={(e) => {
                   const state = e as { id: number; name: string };
                   console.log(state.id);
@@ -179,7 +224,16 @@ const CheckOUT = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <div className="w-[30px] h-[30px] bg-black" />
+            <input type="checkbox"
+            id="saveInfo"
+            onChange={(e)=>{
+              if(e.target.checked){
+                handleSave()
+              }else{
+                handleRemove()
+              }
+            }}
+            />
             <p className="text-lg">Save This Information For Next Time</p>
           </div>
 
