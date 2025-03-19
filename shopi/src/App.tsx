@@ -17,7 +17,7 @@ const App = () => {
           path="/payment"
           element={
             <StripeProvider>
-              <CheckoutForm />
+              <CheckoutForm clientSecret="your-client-secret" />
             </StripeProvider>
           }
         />

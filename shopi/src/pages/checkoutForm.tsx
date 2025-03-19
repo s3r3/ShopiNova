@@ -25,7 +25,7 @@ const CheckoutForm = ({ clientSecret }: { clientSecret: string }) => {
       payment_method: {
         card: cardElement,
       },
-      confirmParams: { return_url: window.location.origin + "/success" },
+      return_url: window.location.origin + "/success",
     });
 
     if (error) {
