@@ -5,6 +5,7 @@ const { STRIPE_SECRET_KEY } = require("../config/stripeConfig");
 const stripe = require("stripe")(STRIPE_SECRET_KEY);
 
 // API untuk membuat token Stripe
+// API untuk membuat token Stripe
 router.post("/create-token", async (req, res) => {
   try {
     const token = await stripe.tokens.create({
@@ -89,19 +90,17 @@ router.post("/payment", async (req, res) => {
 });
 router.post("/create-payment-intent", async (req, res) => {
   try {
+    const { amount, currency } = req.body;
+
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: 1000,
-      currency: "usd",
-      payment_method_types: ["card"],
+      amount,
+      currency,
+      automatic_payment_methods: { enabled: true }, // Aktifkan metode pembayaran otomatis
     });
-    res.json({
-      clientSecret: paymentIntent.client_secret,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({
-      error: "Gagal membuat payment intent",
-    });
+
+    res.json({ clientSecret: paymentIntent.client_secret });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -111,3 +110,5 @@ router.get("/", (req, res) => {
 });
 
 module.exports = router;
+
+// Tambahkan route untuk menguji apakah server berjalan
